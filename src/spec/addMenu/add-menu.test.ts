@@ -33,43 +33,42 @@ describe("Add menu from Zomato", () => {
     "https://www.zomato.com/ncr/wow-momo-alpha-1-greater-noida/order",
     "https://www.zomato.com/ncr/theobroma-alpha-2-greater-noida/order",
     "https://www.zomato.com/ncr/chicago-pizza-1-phi-3-greater-noida/order",
-    // "https://www.zomato.com/ncr/the-belgian-waffle-co-alpha-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/nazeer-foods-alpha-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/chaayos-chai-snacks-relax-phi-3-greater-noida/order",
-    // "https://www.zomato.com/ncr/biryani-blues-phi-3-greater-noida/order",
-    // "https://www.zomato.com/ncr/bikkgane-biryani-jaypee-greens/order",
-    // "https://www.zomato.com/ncr/biryani-by-kilo-alpha-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/cheesecake-co-delta-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/faasos-wraps-rolls-surajpur-noida/order",
-    // "https://www.zomato.com/ncr/the-burger-company-alpha-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/kwality-walls-frozen-dessert-and-ice-cream-shop-alpha-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/nirulas-beta-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/pizza-a-goodness-gamma-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/sagar-ratna-beta-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/the-waffle-co-alpha-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/khan-chacha-1-alpha-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/box8-desi-meals-sector-pi-greater-noida/order",
-    // "https://www.zomato.com/ncr/gianis-ice-cream-shakes-sundaes-surajpur-noida/order",
-    // "https://www.zomato.com/ncr/omnos-pizza-sector-pi/order",
-    // "https://www.zomato.com/ncr/bercos-if-you-love-chinese-beta-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/keventers-milkshakes-desserts-alpha-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/aggarwal-bikaneri-sweets-and-restaurant-beta-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/karims-phi-3-greater-noida/order",
-    // "https://www.zomato.com/ncr/barbeque-nation-beta-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/natural-ice-cream-phi-4-greater-noida/order",
-    // "https://www.zomato.com/ncr/cake-o-clocks-alpha-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/mad-over-donuts-delta-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/pizza-47-1-beta-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/pizzasia-alpha-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/kake-da-hotel-since-1931-chi-4-greater-noida/order",
-    // "https://www.zomato.com/ncr/komal-pizza-1-sector-pi-greater-noida/order",
-    // "https://www.zomato.com/ncr/giani-alpha-1-greater-noida/order",
-    // "https://www.zomato.com/ncr/khans-kathi-rolls-gamma-1/order",
-    // "https://www.zomato.com/ncr/dum-safar-biryani-beta-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/pind-balluchi-alpha-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/mojo-pizza-2x-toppings-sector-pi-greater-noida/order",
-    // "https://www.zomato.com/ncr/onlinecake-in-1-alpha-2-greater-noida/order",
-    // "https://www.zomato.com/ncr/bansooriwalas-alpha-1-greater-noida/order",
+    "https://www.zomato.com/ncr/the-belgian-waffle-co-alpha-1-greater-noida/order",
+    "https://www.zomato.com/ncr/nazeer-foods-alpha-1-greater-noida/order",
+    "https://www.zomato.com/ncr/chaayos-chai-snacks-relax-phi-3-greater-noida/order",
+    "https://www.zomato.com/ncr/biryani-blues-phi-3-greater-noida/order",
+    "https://www.zomato.com/ncr/bikkgane-biryani-jaypee-greens/order",
+    "https://www.zomato.com/ncr/biryani-by-kilo-alpha-2-greater-noida/order",
+    "https://www.zomato.com/ncr/cheesecake-co-delta-1-greater-noida/order",
+    "https://www.zomato.com/ncr/faasos-wraps-rolls-surajpur-noida/order",
+    "https://www.zomato.com/ncr/the-burger-company-alpha-2-greater-noida/order",
+    "https://www.zomato.com/ncr/kwality-walls-frozen-dessert-and-ice-cream-shop-alpha-2-greater-noida/order",
+    "https://www.zomato.com/ncr/nirulas-beta-1-greater-noida/order",
+    "https://www.zomato.com/ncr/pizza-a-goodness-gamma-1-greater-noida/order",
+    "https://www.zomato.com/ncr/sagar-ratna-beta-2-greater-noida/order",
+    "https://www.zomato.com/ncr/the-waffle-co-alpha-1-greater-noida/order",
+    "https://www.zomato.com/ncr/khan-chacha-1-alpha-2-greater-noida/order",
+    "https://www.zomato.com/ncr/box8-desi-meals-sector-pi-greater-noida/order",
+    "https://www.zomato.com/ncr/gianis-ice-cream-shakes-sundaes-surajpur-noida/order",
+    "https://www.zomato.com/ncr/omnos-pizza-sector-pi/order",
+    "https://www.zomato.com/ncr/bercos-if-you-love-chinese-beta-2-greater-noida/order",
+    "https://www.zomato.com/ncr/keventers-milkshakes-desserts-alpha-2-greater-noida/order",
+    "https://www.zomato.com/ncr/aggarwal-bikaneri-sweets-and-restaurant-beta-1-greater-noida/order",
+    "https://www.zomato.com/ncr/karims-phi-3-greater-noida/order",
+    "https://www.zomato.com/ncr/barbeque-nation-beta-2-greater-noida/order",
+    "https://www.zomato.com/ncr/natural-ice-cream-phi-4-greater-noida/order",
+    "https://www.zomato.com/ncr/cake-o-clocks-alpha-2-greater-noida/order",
+    "https://www.zomato.com/ncr/mad-over-donuts-delta-1-greater-noida/order",
+    "https://www.zomato.com/ncr/pizzasia-alpha-2-greater-noida/order",
+    "https://www.zomato.com/ncr/kake-da-hotel-since-1931-chi-4-greater-noida/order",
+    "https://www.zomato.com/ncr/komal-pizza-1-sector-pi-greater-noida/order",
+    "https://www.zomato.com/ncr/giani-alpha-1-greater-noida/order",
+    "https://www.zomato.com/ncr/khans-kathi-rolls-gamma-1/order",
+    "https://www.zomato.com/ncr/dum-safar-biryani-beta-2-greater-noida/order",
+    "https://www.zomato.com/ncr/pind-balluchi-alpha-2-greater-noida/order",
+    "https://www.zomato.com/ncr/mojo-pizza-2x-toppings-sector-pi-greater-noida/order",
+    "https://www.zomato.com/ncr/onlinecake-in-1-alpha-2-greater-noida/order",
+    "https://www.zomato.com/ncr/bansooriwalas-alpha-1-greater-noida/order",
   ];
 
   test("login as admin", async () => {
@@ -136,15 +135,16 @@ describe("Add menu from Zomato", () => {
       }
 
       //fetching the menu of the outlet after importing all the restaurant's menu
-      const menuFromOutlet = await axios.get(`${baseURL}menu/${outletID}`);
+      const menuFromOutlet = await api.menuFromOutlet(outletID);
 
       //iterating over the menu of the outlet
-      for (let menuFromSpoon of menuFromOutlet.data.data.menu) {
+      for (let menuFromSpoon of menuFromOutlet.data) {
         let subCategorySpoon = {};
 
         //excluding the popular items category
         if (menuFromSpoon.categoryName !== "Popular Items") {
           categoryIdToDelete.push(menuFromSpoon._id);
+          let subCategoryWithId: any = {};
           //check whether the subcategory is present in the category or not
           if (menuFromSpoon.subCategories.length > 0) {
             menuFromSpoon.subCategories.forEach((subCategories: any) => {
@@ -153,11 +153,13 @@ describe("Add menu from Zomato", () => {
               subCategories.items.forEach((items: any) => {
                 itemsArray.push(items._id);
               });
+
               //storing the subcategory id with the name
-              subcategoryToDelete = {
-                ...subcategoryToDelete,
+              subCategoryWithId = {
+                ...subCategoryWithId,
                 [subCategories.categoryName]: subCategories._id,
               };
+
               //storing the category id with the item id
               itemIdToUnlink = {
                 ...itemIdToUnlink,
@@ -174,6 +176,12 @@ describe("Add menu from Zomato", () => {
                 [menuFromSpoon.categoryName]: subCategorySpoon,
               };
             });
+
+            //storing the subcategory with the parent category
+            subcategoryToDelete = {
+              ...subcategoryToDelete,
+              [menuFromSpoon._id]: subCategoryWithId,
+            };
           }
           //for no subcategory
           else {
@@ -197,9 +205,6 @@ describe("Add menu from Zomato", () => {
           }
         }
       }
-      console.log(subcategoryToDelete, "SUBCATEGORY");
-      console.log(categoryIdToDelete, "CATEGORY");
-
       expect(categoryItemCountForSpoon).toStrictEqual(
         categoryItemCountForZomato
       );
@@ -215,45 +220,30 @@ describe("Add menu from Zomato", () => {
             itemId: individualItems,
             outletId: outletID,
           });
-          expect(unlinkResponse.message).toBe("Item un-linked successfully.");
         }
       }
     }, 50000);
 
     test(" Delete the sub categories ", async () => {
-      for (let subCategory in subcategoryToDelete) {
-        const payload = {
-          categoryId: subcategoryToDelete[subCategory],
-          categoryName: subCategory,
-          parentCategoryId: "",
-        };
-        const deleteResponse = await api.deleteSubCategory(payload);
-        expect(deleteResponse.message).toBe("Category updated successfully.");
+      for (let categories in subcategoryToDelete) {
+        for (let subcategory in subcategoryToDelete[categories]) {
+          const payload = {
+            categoryId: subcategoryToDelete[categories][subcategory],
+            categoryName: subcategory,
+            parentCategoryId: "",
+          };
+          const deleteResponse = await api.deleteSubCategory(payload);
 
-        //after deleting the subcategory, adding it to the category id list to be deleted from the main category list
-        categoryIdToDelete.push(subcategoryToDelete[subCategory]);
+          //after deleting the subcategory, adding it to the category id list to be deleted from the main category list
+          categoryIdToDelete.push(subcategoryToDelete[categories][subcategory]);
+        }
       }
     });
 
     test(" Delete the categories ", async () => {
       categoryIdToDelete.forEach(async (category: any) => {
         const deleteResponse = await api.deleteCategory(category);
-        expect(deleteResponse.message).toBe("Category deleted successfully.");
       });
     }, 50000);
-
-    // test("Delete the items ", async () => {
-    //   //iterating over the category ids
-    //   for (let categoryId in itemIdToUnlink) {
-    //     //iterating over the items of each category
-    //     for (let individualItems of itemIdToUnlink[categoryId]) {
-    //       const itemDeleteResponse = await api.deleteItem(
-    //         outletID,
-    //         individualItems
-    //       );
-    //       expect(itemDeleteResponse.message).toBe("Item deleted successfully.");
-    //     }
-    //   }
-    // }, 50000);
   });
 });

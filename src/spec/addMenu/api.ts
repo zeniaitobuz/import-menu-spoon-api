@@ -53,6 +53,9 @@ export const api = {
   import: async (payload: { outletId: string; zomatoUrl: string }) => {
     return await instance.post("menu-editor/zomato/menu/copy", payload);
   },
+  menuFromOutlet: async (outletId: string) => {
+    return await instance.get(`menu/${outletId}`);
+  },
   unlink: async (payload: {
     categoryId: string;
     itemId: string;
@@ -61,11 +64,6 @@ export const api = {
     return await instance.delete("menu-editor/delete-item-from-category", {
       data: payload,
     });
-  },
-  deleteItem: async (outletId: string, itemId: string) => {
-    return await instance.delete(
-      `menu-editor/delete-item-from-db/${itemId}?outletId=${outletId}`
-    );
   },
   deleteSubCategory: async (payload: {
     categoryId: string;
