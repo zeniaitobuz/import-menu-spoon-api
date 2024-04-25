@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "jest --runInBand "
+    "test": "jest --runInBand --watchAll"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.4",
@@ -13,6 +13,7 @@
     "fs": "^0.0.1-security",
     "jest-extended": "^4.0.2",
     "mongoose": "^8.3.2",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "puppeteer": "^22.7.0"
   }
 }
