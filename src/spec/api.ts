@@ -50,10 +50,10 @@ export const api = {
       return Promise.reject(e);
     }
   },
-  importZomato: async (payload: { outletId: string; zomatoUrl: string }) => {
+  importZomato: async (payload: { toOutletId: string; menuUrl: string }) => {
     return await instance.post("menu-editor/zomato/menu/copy", payload);
   },
-  importSwiggy: async (payload: { outletId: string; swiggyUrl: string }) => {
+  importSwiggy: async (payload: { toOutletId: string; menuUrl: string }) => {
     return await instance.post("menu-editor/swiggy/menu/copy", payload);
   },
   menuFromOutlet: async (outletId: string) => {
