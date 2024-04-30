@@ -96,7 +96,7 @@ describe("Add menu from Zomato", () => {
       expect(importMenu.data).toBe("Menu imported successfully");
     }, 100000);
 
-    test(`Copy menu from outlet`, async () => {
+    test(`Copy menu from outlet of restaurant - ${restaurantName}`, async () => {
       const copyMenu = await api.copyFromOutlet({
         toOutletId: outletIDToCopyTo,
         fromOutletId: outletIDToCopyFrom,
@@ -104,7 +104,7 @@ describe("Add menu from Zomato", () => {
       expect(copyMenu.data).toBe("Menu copied successfully");
     }, 100000);
 
-    test("Verify the menu of the outlets from where the menu was copied to the outlet to which menu was copied", async () => {
+    test(`Verify the menu of the outlets from where the menu was copied to the outlet to which menu was copied of restaurant - ${restaurantName}`, async () => {
       const menuFromOutlet = await api.menuFromOutlet(outletIDToCopyFrom);
       const menuToOutlet = await api.menuFromOutlet(outletIDToCopyTo);
 
@@ -251,7 +251,7 @@ describe("Add menu from Zomato", () => {
       );
     });
 
-    test("Unlink the items in the parent outlet", async () => {
+    test(`Unlink the items in the parent outlet of restaurant - ${restaurantName}`, async () => {
       for (let categoryName in itemIdToUnlinkFromParentOutlet) {
         //iterating over the items of each category
         for (let individualItems of itemIdToUnlinkFromParentOutlet[
@@ -267,7 +267,7 @@ describe("Add menu from Zomato", () => {
       }
     }, 50000);
 
-    test("Unlink the items in the child outlet", async () => {
+    test(`Unlink the items in the child outlet of restaurant - ${restaurantName}`, async () => {
       for (let categoryName in itemIdToUnlinkToChildOutlet) {
         //iterating over the items of each category
         for (let individualItems of itemIdToUnlinkToChildOutlet[categoryName]) {
@@ -281,7 +281,7 @@ describe("Add menu from Zomato", () => {
       }
     }, 50000);
 
-    test(" Delete the sub categories in parent outlet", async () => {
+    test(` Delete the sub categories in parent outlet of restaurant - ${restaurantName}`, async () => {
       for (let categories in subcategoryToDeleteFromParentOutlet) {
         for (let subcategory in subcategoryToDeleteFromParentOutlet[
           categories
@@ -302,7 +302,7 @@ describe("Add menu from Zomato", () => {
       }
     });
 
-    test(" Delete the sub categories in child outlet", async () => {
+    test(` Delete the sub categories in child outlet of restaurant - ${restaurantName}`, async () => {
       for (let categories in subcategoryToDeleteToChildOutlet) {
         for (let subcategory in subcategoryToDeleteToChildOutlet[categories]) {
           const payload = {
@@ -321,14 +321,14 @@ describe("Add menu from Zomato", () => {
       }
     });
 
-    test(" Delete the categories in parent outlet", async () => {
+    test(` Delete the categories in parent outlet of restaurant - ${restaurantName}`, async () => {
       categoryIdToDeleteFromParentOutlet.forEach(async (category: any) => {
         const deleteResponse = await api.deleteCategory(category);
         expect(deleteResponse.message).toBe("Category deleted successfully.");
       });
     }, 50000);
 
-    test(" Delete the categories in child outlet", async () => {
+    test(` Delete the categories in child outlet of restaurant - ${restaurantName}`, async () => {
       categoryIdToDeleteToChildOutlet.forEach(async (category: any) => {
         const deleteResponse = await api.deleteCategory(category);
         expect(deleteResponse.message).toBe("Category deleted successfully.");
