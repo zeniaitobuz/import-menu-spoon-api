@@ -271,9 +271,6 @@ describe("Add menu from swiggy", () => {
     }, 50000);
 
     test(" Delete the sub categories ", async () => {
-      console.log(subcategoryToDelete, "SUB");
-      console.log(categoryIdToDelete, "CATEGORY");
-
       for (let categories in subcategoryToDelete) {
         for (let subcategory in subcategoryToDelete[categories]) {
           const payload = {
@@ -290,7 +287,6 @@ describe("Add menu from swiggy", () => {
     });
 
     test(" Delete the categories ", async () => {
-      console.log(categoryIdToDelete);
       categoryIdToDelete.forEach(async (category: any) => {
         const deleteResponse = await api.deleteCategory(category);
         expect(deleteResponse.message).toBe("Category deleted successfully.");

@@ -1,11 +1,16 @@
 import { api } from "../api";
 
 describe("Add menu from Zomato", () => {
-  const outletID = "66221d9b846fd45e24790b7a";
+  const outletIDToCopyFrom = "659bb1b45ac2911d667adde4";
+  const outletIDToCopyTo = "66225022369dfc610e98979b";
   const credentials = {
     email: "ashutosh@itobuz.com",
     password: "Admin@1234",
   };
+
+  test("login as admin", async () => {
+    await api.login(credentials);
+  });
 
   const menuList = [
     "https://www.zomato.com/ncr/kfc-knowledge-park/order",
@@ -69,79 +74,47 @@ describe("Add menu from Zomato", () => {
     "https://www.zomato.com/ncr/bansooriwalas-alpha-1-greater-noida/order",
   ];
 
-  test("login as admin", async () => {
-    await api.login(credentials);
-  });
-
   menuList.forEach((menu) => {
     const restaurantName = menu.substring(27, menu.length - 6);
-    const categoryIdToDelete: any = [];
-    let subcategoryToDelete: any = {};
-    let itemIdToUnlink: any = {};
+    const categoryIdToDeleteFromParentOutlet: any = [];
+    let subcategoryToDeleteFromParentOutlet: any = {};
+    let itemIdToUnlinkFromParentOutlet: any = {};
+    let categoryItemCountForParentOutlet: any = {};
+    const categoryIdToDeleteToChildOutlet: any = [];
+    let subcategoryToDeleteToChildOutlet: any = {};
+    let itemIdToUnlinkToChildOutlet: any = {};
+    let categoryItemCountToChildOutlet: any = {};
 
     test(`Import menu of restaurant - ${restaurantName}`, async () => {
       //Logging in as an admin
 
       const importMenu = await api.importZomato({
-        toOutletId: outletID,
+        toOutletId: outletIDToCopyFrom,
         menuUrl: menu,
       });
 
       expect(importMenu.data).toBe("Menu imported successfully");
     }, 100000);
 
-    test(`Check whether the menu of the restaurant - ${restaurantName} matches with the menu of Spoon`, async () => {
-      let categoryItemCountForSpoon: any = {};
-      let categoryItemCountForZomato: any = {};
+    test(`Copy menu from outlet`, async () => {
+      const copyMenu = await api.copyFromOutlet({
+        toOutletId: outletIDToCopyTo,
+        fromOutletId: outletIDToCopyFrom,
+      });
+      expect(copyMenu.data).toBe("Menu copied successfully");
+    }, 100000);
 
-      const restaurantDataLink = menu.replace(
-        "https://www.zomato.com/",
-        "https://www.zomato.com/webroutes/getPage?page_url=/"
-      );
+    test("Verify the menu of the outlets from where the menu was copied to the outlet to which menu was copied", async () => {
+      const menuFromOutlet = await api.menuFromOutlet(outletIDToCopyFrom);
+      const menuToOutlet = await api.menuFromOutlet(outletIDToCopyTo);
 
-      //fetching the menu of each restaurant
-      const menuFromZomato = await (await fetch(restaurantDataLink)).json();
-
-      //iterating over the categories of a menu
-      for (let categoryZomato of menuFromZomato.page_data.order.menuList
-        .menus) {
-        let subCategoriesZomato = {};
-
-        //iterating over the subcategories of the menu if present
-        categoryZomato.menu.categories.forEach((subCategory: any) => {
-          //check if the subcategory name is present or not
-          if (subCategory.category.name) {
-            //storing the subcategory item count of each subcategory along with it's name
-            subCategoriesZomato = {
-              ...subCategoriesZomato,
-              [subCategory.category.name]: subCategory.category.items.length,
-            };
-
-            //storing the item count of the category along with the category name
-            categoryItemCountForZomato = {
-              ...categoryItemCountForZomato,
-              [categoryZomato.menu.name]: subCategoriesZomato,
-            };
-          } else {
-            //storing just the category name and items count if subcategory is not present
-            categoryItemCountForZomato = {
-              ...categoryItemCountForZomato,
-              [categoryZomato.menu.name]: subCategory.category.items.length,
-            };
-          }
-        });
-      }
-
-      //fetching the menu of the outlet after importing all the restaurant's menu
-      const menuFromOutlet = await api.menuFromOutlet(outletID);
-
-      //iterating over the menu of the outlet
+      //iterating over the menu of the outlet from which the menu was copied
       for (let menuFromSpoon of menuFromOutlet.data) {
         let subCategorySpoon = {};
 
         //excluding the popular items category
         if (menuFromSpoon.categoryName !== "Popular Items") {
-          categoryIdToDelete.push(menuFromSpoon._id);
+          categoryIdToDeleteFromParentOutlet.push(menuFromSpoon._id);
           let subCategoryWithId: any = {};
           //check whether the subcategory is present in the category or not
           if (menuFromSpoon.subCategories.length > 0) {
@@ -159,8 +132,8 @@ describe("Add menu from Zomato", () => {
               };
 
               //storing the category id with the item id
-              itemIdToUnlink = {
-                ...itemIdToUnlink,
+              itemIdToUnlinkFromParentOutlet = {
+                ...itemIdToUnlinkFromParentOutlet,
                 [subCategories._id]: itemsArray,
               };
 
@@ -169,15 +142,15 @@ describe("Add menu from Zomato", () => {
                 ...subCategorySpoon,
                 [subCategories.categoryName]: subCategories.items.length,
               };
-              categoryItemCountForSpoon = {
-                ...categoryItemCountForSpoon,
+              categoryItemCountForParentOutlet = {
+                ...categoryItemCountForParentOutlet,
                 [menuFromSpoon.categoryName]: subCategorySpoon,
               };
             });
 
             //storing the subcategory with the parent category
-            subcategoryToDelete = {
-              ...subcategoryToDelete,
+            subcategoryToDeleteFromParentOutlet = {
+              ...subcategoryToDeleteFromParentOutlet,
               [menuFromSpoon._id]: subCategoryWithId,
             };
           }
@@ -190,57 +163,175 @@ describe("Add menu from Zomato", () => {
             });
 
             //storing the item id with the category id
-            itemIdToUnlink = {
-              ...itemIdToUnlink,
+            itemIdToUnlinkFromParentOutlet = {
+              ...itemIdToUnlinkFromParentOutlet,
               [menuFromSpoon._id]: itemsArray,
             };
 
             //storing the category name with their item count
-            categoryItemCountForSpoon = {
-              ...categoryItemCountForSpoon,
+            categoryItemCountForParentOutlet = {
+              ...categoryItemCountForParentOutlet,
               [menuFromSpoon.categoryName]: menuFromSpoon.items.length,
             };
           }
         }
       }
-      expect(categoryItemCountForSpoon).toStrictEqual(
-        categoryItemCountForZomato
-      );
-    }, 500000);
 
-    test("Unlink the items ", async () => {
-      //iterating over the category ids
-      for (let categoryName in itemIdToUnlink) {
+      //iterating over the menu of the outlet to which menu was copied
+      for (let menuFromSpoon of menuToOutlet.data) {
+        let subCategorySpoon = {};
+
+        //excluding the popular items category
+        if (menuFromSpoon.categoryName !== "Popular Items") {
+          categoryIdToDeleteToChildOutlet.push(menuFromSpoon._id);
+          let subCategoryWithId: any = {};
+          //check whether the subcategory is present in the category or not
+          if (menuFromSpoon.subCategories.length > 0) {
+            menuFromSpoon.subCategories.forEach((subCategories: any) => {
+              //storing the items id to delete and unlink them later
+              const itemsArray: any = [];
+              subCategories.items.forEach((items: any) => {
+                itemsArray.push(items._id);
+              });
+
+              //storing the subcategory id with the name
+              subCategoryWithId = {
+                ...subCategoryWithId,
+                [subCategories.categoryName]: subCategories._id,
+              };
+
+              //storing the category id with the item id
+              itemIdToUnlinkToChildOutlet = {
+                ...itemIdToUnlinkToChildOutlet,
+                [subCategories._id]: itemsArray,
+              };
+
+              //storing the subcategory and their items
+              subCategorySpoon = {
+                ...subCategorySpoon,
+                [subCategories.categoryName]: subCategories.items.length,
+              };
+              categoryItemCountToChildOutlet = {
+                ...categoryItemCountToChildOutlet,
+                [menuFromSpoon.categoryName]: subCategorySpoon,
+              };
+            });
+
+            //storing the subcategory with the parent category
+            subcategoryToDeleteToChildOutlet = {
+              ...subcategoryToDeleteToChildOutlet,
+              [menuFromSpoon._id]: subCategoryWithId,
+            };
+          }
+          //for no subcategory
+          else {
+            const itemsArray: any = [];
+            menuFromSpoon.items.forEach((items) => {
+              //storing the items id to delete and unlink them later
+              itemsArray.push(items._id);
+            });
+
+            //storing the item id with the category id
+            itemIdToUnlinkToChildOutlet = {
+              ...itemIdToUnlinkToChildOutlet,
+              [menuFromSpoon._id]: itemsArray,
+            };
+
+            //storing the category name with their item count
+            categoryItemCountToChildOutlet = {
+              ...categoryItemCountToChildOutlet,
+              [menuFromSpoon.categoryName]: menuFromSpoon.items.length,
+            };
+          }
+        }
+      }
+
+      expect(categoryItemCountForParentOutlet).toStrictEqual(
+        categoryItemCountToChildOutlet
+      );
+    });
+
+    test("Unlink the items in the parent outlet", async () => {
+      for (let categoryName in itemIdToUnlinkFromParentOutlet) {
         //iterating over the items of each category
-        for (let individualItems of itemIdToUnlink[categoryName]) {
+        for (let individualItems of itemIdToUnlinkFromParentOutlet[
+          categoryName
+        ]) {
           const unlinkResponse = await api.unlink({
             categoryId: categoryName,
             itemId: individualItems,
-            outletId: outletID,
+            outletId: outletIDToCopyFrom,
           });
+          expect(unlinkResponse.message).toBe("Item un-linked successfully.");
         }
       }
     }, 50000);
 
-    test(" Delete the sub categories ", async () => {
-      for (let categories in subcategoryToDelete) {
-        for (let subcategory in subcategoryToDelete[categories]) {
+    test("Unlink the items in the child outlet", async () => {
+      for (let categoryName in itemIdToUnlinkToChildOutlet) {
+        //iterating over the items of each category
+        for (let individualItems of itemIdToUnlinkToChildOutlet[categoryName]) {
+          const unlinkResponse = await api.unlink({
+            categoryId: categoryName,
+            itemId: individualItems,
+            outletId: outletIDToCopyTo,
+          });
+          expect(unlinkResponse.message).toBe("Item un-linked successfully.");
+        }
+      }
+    }, 50000);
+
+    test(" Delete the sub categories in parent outlet", async () => {
+      for (let categories in subcategoryToDeleteFromParentOutlet) {
+        for (let subcategory in subcategoryToDeleteFromParentOutlet[
+          categories
+        ]) {
           const payload = {
-            categoryId: subcategoryToDelete[categories][subcategory],
+            categoryId:
+              subcategoryToDeleteFromParentOutlet[categories][subcategory],
             categoryName: subcategory,
             parentCategoryId: "",
           };
           const deleteResponse = await api.deleteSubCategory(payload);
-
+          expect(deleteResponse.message).toBe("Category updated successfully.");
           //after deleting the subcategory, adding it to the category id list to be deleted from the main category list
-          categoryIdToDelete.push(subcategoryToDelete[categories][subcategory]);
+          categoryIdToDeleteFromParentOutlet.push(
+            subcategoryToDeleteFromParentOutlet[categories][subcategory]
+          );
         }
       }
     });
 
-    test(" Delete the categories ", async () => {
-      categoryIdToDelete.forEach(async (category: any) => {
+    test(" Delete the sub categories in child outlet", async () => {
+      for (let categories in subcategoryToDeleteToChildOutlet) {
+        for (let subcategory in subcategoryToDeleteToChildOutlet[categories]) {
+          const payload = {
+            categoryId:
+              subcategoryToDeleteToChildOutlet[categories][subcategory],
+            categoryName: subcategory,
+            parentCategoryId: "",
+          };
+          const deleteResponse = await api.deleteSubCategory(payload);
+          expect(deleteResponse.message).toBe("Category updated successfully.");
+          //after deleting the subcategory, adding it to the category id list to be deleted from the main category list
+          categoryIdToDeleteToChildOutlet.push(
+            subcategoryToDeleteToChildOutlet[categories][subcategory]
+          );
+        }
+      }
+    });
+
+    test(" Delete the categories in parent outlet", async () => {
+      categoryIdToDeleteFromParentOutlet.forEach(async (category: any) => {
         const deleteResponse = await api.deleteCategory(category);
+        expect(deleteResponse.message).toBe("Category deleted successfully.");
+      });
+    }, 50000);
+
+    test(" Delete the categories in child outlet", async () => {
+      categoryIdToDeleteToChildOutlet.forEach(async (category: any) => {
+        const deleteResponse = await api.deleteCategory(category);
+        expect(deleteResponse.message).toBe("Category deleted successfully.");
       });
     }, 50000);
   });

@@ -56,6 +56,12 @@ export const api = {
   importSwiggy: async (payload: { toOutletId: string; menuUrl: string }) => {
     return await instance.post("menu-editor/swiggy/menu/copy", payload);
   },
+  copyFromOutlet: async (payload: {
+    toOutletId: string;
+    fromOutletId: string;
+  }) => {
+    return await instance.post("menu-editor/outlet/menu/copy", payload);
+  },
   menuFromOutlet: async (outletId: string) => {
     return await instance.get(`menu/${outletId}`);
   },
