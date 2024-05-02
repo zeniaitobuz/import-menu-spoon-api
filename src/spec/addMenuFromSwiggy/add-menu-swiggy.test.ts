@@ -2,11 +2,12 @@ import { api } from "../api";
 import puppeteer, { HTTPRequest } from "puppeteer";
 
 describe("Add menu from swiggy", () => {
-  const outletID = "66221d9b846fd45e24790b7a";
+  const outletID = "663327f2c6e88e20918daa17";
   const credentials = {
     email: "ashutosh@itobuz.com",
     password: "Admin@1234",
   };
+
   const menuLinks = [
     "https://www.swiggy.com/restaurants/pizza-hut-kalikapur-kolkata-kolkata-769456",
     "https://www.swiggy.com/restaurants/barbeque-nation-kasba-kolkata-515519",
@@ -69,6 +70,8 @@ describe("Add menu from swiggy", () => {
     const categoryIdToDelete: any = [];
     let subcategoryToDelete: any = {};
     let itemIdToUnlink: any = {};
+    let recommendedItems: Number;
+    let popularItems: Number;
 
     test(`Import menu from swiggy for restaurant ${restaurantNameForTest}`, async () => {
       const importMenu = await api.importSwiggy({
@@ -92,14 +95,17 @@ describe("Add menu from swiggy", () => {
       });
       const restaurantName = textContent?.split("|")[0];
 
+      console.log(restaurantName);
+
       const restaurantPage = await browser.newPage();
       await restaurantPage.goto("https://www.swiggy.com/search");
       await restaurantPage.click('input[type="text"]');
       await restaurantPage.type('input[type="text"]', restaurantName);
       await restaurantPage.keyboard.press("Enter");
-      await restaurantPage.waitForSelector(
+      const selector = await restaurantPage.waitForSelector(
         '[class="Search_widgetsV2__27BBR Search_widgets__3o_bA"] > div:nth-child(1)'
       );
+
       await restaurantPage.click(
         '[class="Search_widgetsV2__27BBR Search_widgets__3o_bA"] > div:nth-child(1) > div'
       );
@@ -111,6 +117,8 @@ describe("Add menu from swiggy", () => {
           }
         });
       });
+
+      console.log(urlPromise);
 
       await restaurantPage.close();
 
@@ -140,18 +148,22 @@ describe("Add menu from swiggy", () => {
         if (menu.card.card["@type"].includes(".ItemCategory")) {
           let itemCount = 0;
           //iterating over the items
+
           for (let itemIndex of menu.card.card.itemCards) {
             if (itemIndex.card["@type"].includes(".Dish")) {
               //counting the number of items in each category
               itemCount++;
             }
           }
-
-          //storing the category name and their item count
-          menuForSwiggy = {
-            ...menuForSwiggy,
-            [menu.card.card.title]: itemCount,
-          };
+          if (menu.card.card.title !== "Recommended") {
+            //storing the category name and their item count
+            menuForSwiggy = {
+              ...menuForSwiggy,
+              [menu.card.card.title]: itemCount,
+            };
+          } else {
+            recommendedItems = itemCount;
+          }
         }
         //checking if there are subcategories
         else if (menu.card.card["@type"].includes(".NestedItemCategory")) {
@@ -180,6 +192,8 @@ describe("Add menu from swiggy", () => {
         }
       }
 
+      console.log(menuForSwiggy);
+
       //fetching the menu of the outlet after importing all the restaurant's menu
       const menuFromOutlet = await api.menuFromOutlet(outletID);
 
@@ -187,71 +201,73 @@ describe("Add menu from swiggy", () => {
       for (let menuFromSpoon of menuFromOutlet.data) {
         let subCategorySpoon = {};
 
-        //excluding the popular items category
-        if (menuFromSpoon.categoryName !== "Popular Items") {
-          categoryIdToDelete.push(menuFromSpoon._id);
-          let subCategoryWithId: any = {};
-          //check whether the subcategory is present in the category or not
-          if (menuFromSpoon.subCategories.length > 0) {
-            menuFromSpoon.subCategories.forEach((subCategories: any) => {
-              //storing the items id to delete and unlink them later
-              const itemsArray: any = [];
-              subCategories.items.forEach((items: any) => {
-                itemsArray.push(items._id);
-              });
-
-              //storing the subcategory id with the name
-              subCategoryWithId = {
-                ...subCategoryWithId,
-                [subCategories.categoryName]: subCategories._id,
-              };
-
-              //storing the category id with the item id
-              itemIdToUnlink = {
-                ...itemIdToUnlink,
-                [subCategories._id]: itemsArray,
-              };
-
-              //storing the subcategory and their items
-              subCategorySpoon = {
-                ...subCategorySpoon,
-                [subCategories.categoryName]: subCategories.items.length,
-              };
-              menuForSpoon = {
-                ...menuForSpoon,
-                [menuFromSpoon.categoryName]: subCategorySpoon,
-              };
-            });
-
-            //storing the subcategory with the parent category
-            subcategoryToDelete = {
-              ...subcategoryToDelete,
-              [menuFromSpoon._id]: subCategoryWithId,
-            };
-          }
-          //for no subcategory
-          else {
+        categoryIdToDelete.push(menuFromSpoon._id);
+        let subCategoryWithId: any = {};
+        //check whether the subcategory is present in the category or not
+        if (menuFromSpoon.subCategories.length > 0) {
+          menuFromSpoon.subCategories.forEach((subCategories: any) => {
+            //storing the items id to delete and unlink them later
             const itemsArray: any = [];
-            menuFromSpoon.items.forEach((items) => {
-              //storing the items id to delete and unlink them later
+            subCategories.items.forEach((items: any) => {
               itemsArray.push(items._id);
             });
 
-            //storing the item id with the category id
-            itemIdToUnlink = {
-              ...itemIdToUnlink,
-              [menuFromSpoon._id]: itemsArray,
+            //storing the subcategory id with the name
+            subCategoryWithId = {
+              ...subCategoryWithId,
+              [subCategories.categoryName]: subCategories._id,
             };
 
+            //storing the category id with the item id
+            itemIdToUnlink = {
+              ...itemIdToUnlink,
+              [subCategories._id]: itemsArray,
+            };
+
+            //storing the subcategory and their items
+            subCategorySpoon = {
+              ...subCategorySpoon,
+              [subCategories.categoryName]: subCategories.items.length,
+            };
+            menuForSpoon = {
+              ...menuForSpoon,
+              [menuFromSpoon.categoryName]: subCategorySpoon,
+            };
+          });
+
+          //storing the subcategory with the parent category
+          subcategoryToDelete = {
+            ...subcategoryToDelete,
+            [menuFromSpoon._id]: subCategoryWithId,
+          };
+        }
+        //for no subcategory
+        else {
+          const itemsArray: any = [];
+          menuFromSpoon.items.forEach((items) => {
+            //storing the items id to delete and unlink them later
+            itemsArray.push(items._id);
+          });
+
+          //storing the item id with the category id
+          itemIdToUnlink = {
+            ...itemIdToUnlink,
+            [menuFromSpoon._id]: itemsArray,
+          };
+          if (menuFromSpoon.categoryName !== "Popular Items") {
             //storing the category name with their item count
             menuForSpoon = {
               ...menuForSpoon,
               [menuFromSpoon.categoryName]: menuFromSpoon.items.length,
             };
+          } else {
+            popularItems = menuFromSpoon.items.length;
           }
         }
       }
 
+      console.log(menuForSpoon);
+      expect(popularItems).toBe(recommendedItems);
       expect(menuForSpoon).toStrictEqual(menuForSwiggy);
     }, 1000000);
 
